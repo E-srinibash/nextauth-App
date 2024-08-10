@@ -1,9 +1,6 @@
 import { connect } from "@/dbConfig/dbConfig";
 import User from "@/models/userModel"
 import {NextRequest,NextResponse} from "next/server"
-import bcryptjs from "bcryptjs"
-import { sendEmail } from "@/helpers/mailer";
-
 
 connect();
 
@@ -16,7 +13,7 @@ export async function POST(request:NextRequest){
         const user =  await User.findOne({verifyToken:token, verifyTokenExpiry:{$gt: Date.now()}})
 
         if(!user){
-            return NextResponse.json({error:"Invalid token details"},{status:400})
+            return NextResponse.json({error:"Invalid token "},{status:400})
         }
         console.log(user);
 
@@ -29,7 +26,7 @@ export async function POST(request:NextRequest){
         return NextResponse.json({
             message:"Email verified Successfully",
             success:true
-        },{status:200})
+        })
     }
     catch(error:any){
         return NextResponse.json({error:error.message},{status: 500})

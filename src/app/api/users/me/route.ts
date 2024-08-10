@@ -5,12 +5,13 @@ import { NextRequest,NextResponse } from "next/server"
 
 connect()
 
-export async function POST(request:NextRequest) {
+export async function GET(request:NextRequest) {
     //extract data from token
 
-    const userId = await getDataFromToken(request)
+    try{
+        const userId = await getDataFromToken(request);
     const user = await User.findOne({_id: userId}).select("-password");
-
+    
     // if(!user){
     //     return NextResponse.json({
     //         message:"User not Found"
@@ -20,4 +21,10 @@ export async function POST(request:NextRequest) {
         message:"User found",
         data: user
     })
+    }
+    catch(error:any){
+        return NextResponse.json(
+            {error:error.message},
+            {status:400});
+    }
 }
